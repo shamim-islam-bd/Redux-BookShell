@@ -1,58 +1,86 @@
-const {applyMiddleware,createStore} = require('redux')
-const {default: logger} = require("redux-logger");
+// async action- api calling.
+// api url - https://jsonplaceholder.typicode.com/todos
+// middleware -redux-thunk
+// axios api
 
+const { default: axios } = require("axios");
+const { createStore, applyMiddleware } = require("redux");
+const thunk = require('redux-thunk').default;
 
-// conastance
-const GET_PRODUCTS = "GET_PRODUCTS";
-const ADD_PRODUCTS = "ADD_PRODUCTS";
+// conastant
+const TODOS_REQUEST = "TODOS_REQUEST";
+const TODOS_SUCCESS = "TODOS_SUCCESS";
+const TODOS_FAIELD = "TODOS_FAIELD";
+const API_URL = "https://jsonplaceholder.typicode.com/todos";
 
-// state 
-const initialState = {
-    products: ["tomato", "potato"],
-    NumOfProducts: 2,
- }
-
-// declare  Action > types 
-const getProducts = () =>{
-   return {
-      type: GET_PRODUCTS,
-   }
-}
-const AddProducts = (product) =>{
-   return {
-      type: ADD_PRODUCTS,
-      payload: product,
-   }
+//states
+const initalState = {
+    todos: [],
+    isLoading: false,
+    error: null,
 }
 
-
-// ProductsReducer
-const ProductReducer = (state = initialState, action) => {
-   switch (action.type) {
-      case GET_PRODUCTS:
-       return {
-           ...state,
-        }
-      case ADD_PRODUCTS:
-       return {
-           products: [...state.products, action.payload],
-           NumOfProducts: state.NumOfProducts +  1,
-         }
-      default:
-        return state;
-   }
+// actions
+const getTodosRequest = () =>{
+    return{type: TODOS_REQUEST}
 }
-    
-    
-// dispatch
-const store = createStore(ProductReducer, applyMiddleware(logger));
+const getTodosSuccess = (success) =>{
+    return{
+        type: TODOS_SUCCESS,
+        payload: success,
+    }
+}
+const getTodosFailed = (error) =>{
+    return{
+        type: TODOS_FAIELD,
+        payload: error,
+    }
+}
+
+// reducer
+const reducer = (state = initalState, action) =>{
+  switch (action.type) {
+    case TODOS_REQUEST:
+      return{
+        ...state,
+        isLoading: true,
+      }
+    case TODOS_SUCCESS:
+      return{
+        ...state,
+        isLoading: false,
+        payload: action.payload
+      }
+    case TODOS_FAIELD:
+      return{
+        ...state,
+        isLoading: true,
+        payload: action.payload
+      }
+    default:
+       return state;
+  }
+}
 
 
-store.subscribe(()=> {
-   console.log(store.getState())
+//Asyncing fetching data.
+const fetchData = () => {
+  return (dispatch) =>{
+     dispatch(getTodosRequest());
+     axios.get(API_URL)
+     .then(res=>{console.log(res.data)})
+     .catch(error => {console.log(error.message)})
+  }
+}
+
+
+
+//store
+const store = createStore(reducer, applyMiddleware(thunk));
+
+store.subscribe(()=>{
+    console.log(store.getState());
 })
 
-
-store.dispatch(getProducts());
-store.dispatch(getProducts( "Apple " ));
-
+// Dispatch
+store.dispatch(fetchData())
