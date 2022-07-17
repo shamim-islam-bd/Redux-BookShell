@@ -2,11 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --experimental-modules --es-module-specifier-resolution=node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +12,8 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.3",
     "react-redux": "^8.0.2",
-    "redux": "^4.2.0"
+    "redux": "^4.2.0",
+    "redux-logger": "^3.0.6"
   },
   "devDependencies": {
     "babel-loader": "^8.2.5"

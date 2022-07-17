@@ -1,4 +1,10 @@
-import { combineReducers, createStore } from "redux";
+const {applyMiddleware,createStore} = require('redux')
+const {default: logger} = require("redux-logger");
+
+
+// conastance
+const GET_PRODUCTS = "GET_PRODUCTS";
+const ADD_PRODUCTS = "ADD_PRODUCTS";
 
 // state 
 const initialState = {
@@ -6,47 +12,28 @@ const initialState = {
     NumOfProducts: 2,
  }
 
-// Cart state 
-const CartInitialState = {
-    CartProducts: ["tomato", "potato"],
-    NumOfCartProducts: 2,
- }
-
-
 // declare  Action > types 
 const getProducts = () =>{
    return {
-      type: "getProducts"
+      type: GET_PRODUCTS,
    }
 }
 const AddProducts = (product) =>{
    return {
-      type: "AddProducts",
+      type: ADD_PRODUCTS,
       payload: product,
    }
 }
 
-// declare Cart Action > types
-const getCartProducts = () =>{
-   return {
-      type: "getCartProducts"
-   }
-}
-const AddCartProducts = (CartProduct) =>{
-   return {
-      type: "AddCartProducts",
-      payload: CartProduct,
-   }
-}
 
 // ProductsReducer
 const ProductReducer = (state = initialState, action) => {
    switch (action.type) {
-      case "getProducts":
+      case GET_PRODUCTS:
        return {
            ...state,
         }
-      case "AddProducts":
+      case ADD_PRODUCTS:
        return {
            products: [...state.products, action.payload],
            NumOfProducts: state.NumOfProducts +  1,
@@ -56,32 +43,9 @@ const ProductReducer = (state = initialState, action) => {
    }
 }
     
-// ProductsReducer
-const CartProductReducer = (state = CartInitialState, action) => {
-   switch (action.type) {
-      case "getCartProducts":
-       return {
-           ...state,
-        }
-      case "AddCartProducts":
-       return {
-           CartProducts: [...state.CartProducts, action.payload],
-           NumOfCartProducts: state.NumOfCartProducts +  1,
-         }
-      default:
-        return state;
-   }
-}
     
-
-// RootReducer
-const rootReducer = combineReducers({
-   productR : ProductReducer,
-   cartR: CartProductReducer,
-})
-
 // dispatch
-const store = createStore(rootReducer);
+const store = createStore(ProductReducer, applyMiddleware(logger));
 
 
 store.subscribe(()=> {
@@ -90,8 +54,5 @@ store.subscribe(()=> {
 
 
 store.dispatch(getProducts());
-
-store.dispatch(getCartProducts());
-store.dispatch(AddCartProducts( "orange" ));
-
+store.dispatch(getProducts( "Apple " ));
 
