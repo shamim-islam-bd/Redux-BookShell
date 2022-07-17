@@ -1,0 +1,10 @@
+
+1. insall packages.
+2. constants define.
+3. async axios operation
+4. reducer
+5. store create
+6. store provide app.js
+
+7. store use in react
+8. style.
