@@ -3,7 +3,7 @@ import { createStore } from "redux";
 // state 
 const initialState = {
     products: ["tomato", "potato"],
-    count: 2,
+    NumOfProducts: 2,
  }
 
 
@@ -13,10 +13,10 @@ const getProducts = () =>{
       type: "getProducts"
    }
 }
-const AddProducts = (value) =>{
+const AddProducts = (product) =>{
    return {
       type: "AddProducts",
-      payload: value
+      payload: product,
    }
 }
 
@@ -30,7 +30,7 @@ const ProductReducer = (state = initialState, action) => {
       case "AddProducts":
        return {
            products: [...state.products, action.payload],
-           count: state.count +  1
+           NumOfProducts: state.NumOfProducts +  1,
          }
       default:
          state;
@@ -47,3 +47,4 @@ store.subscribe(()=> {
 
 store.dispatch(getProducts());
 store.dispatch(AddProducts( "banana" ));
+store.dispatch(AddProducts( "apple" ));
