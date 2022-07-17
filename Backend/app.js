@@ -46,16 +46,7 @@ const ProductReducer = (state = initialState, action) => {
        return {
            ...state,
         }
-      case "getCartProducts":
-       return {
-           ...state,
-        }
       case "AddProducts":
-       return {
-           products: [...state.products, action.payload],
-           NumOfProducts: state.NumOfProducts +  1,
-         }
-      case "AddCartProducts":
        return {
            products: [...state.products, action.payload],
            NumOfProducts: state.NumOfProducts +  1,
