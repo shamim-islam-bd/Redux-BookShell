@@ -1,4 +1,4 @@
-import { createStore } from "redux";
+import { combineReducers, createStore } from "redux";
 
 // state 
 const initialState = {
@@ -6,8 +6,14 @@ const initialState = {
     NumOfProducts: 2,
  }
 
+// Cart state 
+const CartInitialState = {
+    CartProducts: ["tomato", "potato"],
+    NumOfCartProducts: 2,
+ }
 
-// declare types
+
+// declare  Action > types 
 const getProducts = () =>{
    return {
       type: "getProducts"
@@ -20,10 +26,27 @@ const AddProducts = (product) =>{
    }
 }
 
+// declare Cart Action > types
+const getCartProducts = () =>{
+   return {
+      type: "getCartProducts"
+   }
+}
+const AddCartProducts = (CartProduct) =>{
+   return {
+      type: "AddCartProducts",
+      payload: CartProduct,
+   }
+}
+
 // ProductsReducer
 const ProductReducer = (state = initialState, action) => {
    switch (action.type) {
       case "getProducts":
+       return {
+           ...state,
+        }
+      case "getCartProducts":
        return {
            ...state,
         }
@@ -32,19 +55,52 @@ const ProductReducer = (state = initialState, action) => {
            products: [...state.products, action.payload],
            NumOfProducts: state.NumOfProducts +  1,
          }
+      case "AddCartProducts":
+       return {
+           products: [...state.products, action.payload],
+           NumOfProducts: state.NumOfProducts +  1,
+         }
       default:
-         state;
+        return state;
+   }
+}
+    
+// ProductsReducer
+const CartProductReducer = (state = CartInitialState, action) => {
+   switch (action.type) {
+      case "getCartProducts":
+       return {
+           ...state,
+        }
+      case "AddCartProducts":
+       return {
+           CartProducts: [...state.CartProducts, action.payload],
+           NumOfCartProducts: state.NumOfCartProducts +  1,
+         }
+      default:
+        return state;
    }
 }
     
 
+// RootReducer
+const rootReducer = combineReducers({
+   productR : ProductReducer,
+   cartR: CartProductReducer,
+})
+
 // dispatch
-const store = createStore(ProductReducer);
+const store = createStore(rootReducer);
+
 
 store.subscribe(()=> {
    console.log(store.getState())
 })
 
+
 store.dispatch(getProducts());
-store.dispatch(AddProducts( "banana" ));
-store.dispatch(AddProducts( "apple" ));
+
+store.dispatch(getCartProducts());
+store.dispatch(AddCartProducts( "orange" ));
+
+
