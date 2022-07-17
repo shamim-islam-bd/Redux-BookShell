@@ -1,33 +1,40 @@
-
+import { createStore } from "redux";
+// import { configureStore } from '@reduxjs/toolkit'
 //state
-const initialCount = {
-    count: 0,
+ const initialState = {
     User: ["Shamim"],
+    count: 1,
   };
   
 //action
-  const Increment = () => {
-    type: "increment";
-  };
-  const AddUser = () => {
-    type: "increment";
+  const AddUser = (value) => {
+   return {
+     type: "increment",
+     payload: value,
+   } 
   };
 
 //reducer 
-    const countReducer = (state = initialCount, action) => {
+    const userReducer = (state = initialState, action) => {
       switch (action.type) {
         case "increment":
           return {
-            ...state,
+            Users: [...state.User, action.payload],
             count: state.count + 1,
-          };
-        case "addUser":
-          return {
-            ...state,
-            User: [...state.User, action.payload],
           };
         default:
           return state;
       }
-    }
+    } 
 
+// store
+const store = createStore(userReducer);
+
+//subscribe for checking the state.
+store.subscribe(() => {
+  console.log(store.getState());
+});
+
+//dispatching the action
+// store.dispatch(AddUser("Tamim"));
+store.dispatch(AddUser("Sadik", "tamim", "mishadh", "hey"));
